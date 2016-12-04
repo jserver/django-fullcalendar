@@ -4,6 +4,7 @@ from ..fullcalendar import css_url, print_css_url, javascript_url, jquery_url, j
 
 register = template.Library()
 
+script_tag = '<script type="text/javascript" src="%s"></script>'
 
 @register.inclusion_tag("fullcalendar/calendar.html")
 def calendar():
@@ -26,6 +27,10 @@ def fullcalendar_javascript_url():
     return javascript_url()
 
 @register.simple_tag
+def fullcalendar_momentjs_url():
+    return momentjs_url()
+
+@register.simple_tag
 def fullcalendar_jquery_url():
     return jquery_url()
 
@@ -46,14 +51,19 @@ def fullcalendar_print_css():
 @register.simple_tag
 def fullcalendar_jquery():
     url = fullcalendar_jquery_url()
-    return mark_safe("<script src='%s'></script>" % url)
+    return mark_safe(script_tag % url)
 
 @register.simple_tag
 def fullcalendar_jquery_ui():
     url = fullcalendar_jquery_ui_url()
-    return mark_safe("<script src='%s'></script>" % url)
+    return mark_safe(script_tag % url)
 
 @register.simple_tag
 def fullcalendar_javascript():
     url = fullcalendar_javascript_url()
-    return mark_safe("<script src='%s'></script>" % url)
+    return mark_safe(script_tag % url)
+
+@register.simple_tag
+def fullcalendar_momentjs():
+    url = fullcalendar_momentjs_url()
+    return mark_safe(script_tag % url)
