@@ -10,11 +10,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-fullcalendar',
-    version='0.1',
+    version='0.2',
     packages=['fullcalendar', 'fullcalendar.templatetags',],
     include_package_data=True,
     license='MIT License',  # example license
-    description='FullCalendar jQuery plugin integration with Django.',
+    description='FullCalendar 3 jQuery plugin integration with Django.',
     long_description=README,
     url='http://github.com/rodrigoamaral/django-fullcalendar',
     author='Rodrigo Amaral',
