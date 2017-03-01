@@ -1,37 +1,76 @@
 # -*- coding: utf-8 -*-
-
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+
+
+class EventISO(models.Model):
+    name = models.CharField(max_length=10, unique=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __unicode__(self):
+        return self.name
+
+
+class EventState(models.Model):
+    abbrev = models.CharField(max_length=2, unique=True)
+    name = models.CharField(max_length=20, unique=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __unicode__(self):
+        return self.name
+
+
+class EventUtility(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ('name',)
+
+    def __unicode__(self):
+        return self.name
+
+
+class EventYear(models.Model):
+    value = models.CharField(max_length=4, unique=True)
+
+    class Meta:
+        ordering = ('value',)
+
+    def __unicode__(self):
+        return self.value
+
+
+class EventRFPType(models.Model):
+    value = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ('value',)
+
+    def __unicode__(self):
+        return self.value
 
 
 class CalendarEvent(models.Model):
-    """The event set a record for an 
-    activity that will be scheduled at a 
-    specified date and time. 
-    
-    It could be on a date and time 
-    to start and end, but can also be all day.
-    
-    :param title: Title of event
-    :type title: str.
-    
-    :param start: Start date of event
-    :type start: datetime.
-    
-    :param end: End date of event
-    :type end: datetime.
-    
-    :param all_day: Define event for all day
-    :type all_day: bool.
-    """
-    title = models.CharField(_('Title'), blank=True, max_length=200)
-    start = models.DateTimeField(_('Start'))
-    end = models.DateTimeField(_('End'))
-    all_day = models.BooleanField(_('All day'), default=False)
+    title = models.CharField(max_length=255)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    all_day = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
+
+    description = models.TextField(null=True, blank=True)
+    iso = models.ForeignKey(EventISO, null=True, blank=True)
+    state = models.ForeignKey(EventState, null=True, blank=True)
+    utilities = models.ManyToManyField(EventUtility, blank=True)
+    years = models.ManyToManyField(EventYear, blank=True)
+    rfp_types = models.ManyToManyField(EventRFPType, blank=True, verbose_name='RFP Types')
 
     class Meta:
-        verbose_name = _('Event')
-        verbose_name_plural = _('Events')
+        ordering = ('start',)
+        verbose_name = 'Event'
+        verbose_name_plural = 'Events'
 
     def __unicode__(self):
         return self.title
