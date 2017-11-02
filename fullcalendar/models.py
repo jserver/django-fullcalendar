@@ -1,38 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-
-class EventISO(models.Model):
-    name = models.CharField(max_length=10, unique=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __unicode__(self):
-        return self.name
-
-
-class EventState(models.Model):
-    abbrev = models.CharField(max_length=2, unique=True)
-    name = models.CharField(max_length=20, unique=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __unicode__(self):
-        return self.name
-
-
-class EventUtility(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        ordering = ('name',)
-
-    def __unicode__(self):
-        return self.name
-
-
 class EventYear(models.Model):
     value = models.CharField(max_length=4, unique=True)
 
@@ -42,17 +10,6 @@ class EventYear(models.Model):
     def __unicode__(self):
         return self.value
 
-
-class EventRFPType(models.Model):
-    value = models.CharField(max_length=50, unique=True)
-
-    class Meta:
-        ordering = ('value',)
-
-    def __unicode__(self):
-        return self.value
-
-
 class CalendarEvent(models.Model):
     title = models.CharField(max_length=255)
     start = models.DateTimeField()
@@ -61,11 +18,7 @@ class CalendarEvent(models.Model):
     active = models.BooleanField(default=True)
 
     description = models.TextField(null=True, blank=True)
-    iso = models.ForeignKey(EventISO, null=True, blank=True)
-    state = models.ForeignKey(EventState, null=True, blank=True)
-    utilities = models.ManyToManyField(EventUtility, blank=True)
     years = models.ManyToManyField(EventYear, blank=True)
-    rfp_types = models.ManyToManyField(EventRFPType, blank=True, verbose_name='RFP Types')
 
     class Meta:
         ordering = ('start',)

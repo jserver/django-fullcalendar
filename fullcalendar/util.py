@@ -57,6 +57,9 @@ def events_to_json(events_queryset):
     """
     events_queryset = events_queryset.select_related('iso', 'state').prefetch_related('utilities', 'years', 'rfp_types')
 
+    import os
+    from django.conf import settings
+    from attachments.models import Attachment
     events_values = []
     for event in events_queryset:
         evdict = {
@@ -66,19 +69,28 @@ def events_to_json(events_queryset):
             'end': event.end,
             'all_day': event.all_day,
             'description': event.description,
-            'state': event.state.name if event.state else None,
-            'iso': event.iso.name if event.iso else None,
         }
-        evdict['utilities'] = [ev.name for ev in event.utilities.all()]
+        evdict['states'] = [ev.state.stateid for ev in event.calendareventstate_set.all()]
+        evdict['states_name'] = [str(ev.state) for ev in event.calendareventstate_set.all()]
+        evdict['isos'] = [ev.iso.isoid for ev in event.calendareventiso_set.all()]
+        evdict['utilities'] = [ev.utility.utilityid for ev in event.calendareventutility_set.all()]
+        evdict['isos_name'] = [str(ev.iso) for ev in event.calendareventiso_set.all()]
+        evdict['utilities_name'] = [str(ev.utility) for ev in event.calendareventutility_set.all()]
         evdict['years'] = [ev.value for ev in event.years.all()]
-        evdict['rfptypes'] = [ev.value for ev in event.rfp_types.all()]
+        evdict['rfptypes'] = [ev.rfp_type for ev in event.calendareventrfptype_set.all()]
+        evdict['rfptypes_name'] = [ev.get_rfp_type_display() for ev in event.calendareventrfptype_set.all()]
+        evdict['attachment_links'] = [{'link': os.path.join(settings.MEDIA_URL, ev.attachment_file.name), 'name': os.path.basename(ev.attachment_file.name)} for ev in Attachment.objects.attachments_for_object(event)]
         events_values.append(evdict)
 
     events_values = convert_field_names(events_values)
     for event in events_values:
+        if event['title'] == "Test":
+            print repr(event['end'])
         if 'allDay' in event and event['allDay']:
             event['start'] = event['start'].date()
             event['end'] = event['end'].date()
+        if event['title'] == "Test":
+            print repr(event['end'])
     return json.dumps(events_values, default=date_handler)
 
 
