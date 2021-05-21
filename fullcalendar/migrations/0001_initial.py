@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='calendarevent',
             name='iso',
-            field=models.ForeignKey(blank=True, to='fullcalendar.EventISO', null=True),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, blank=True, to='fullcalendar.EventISO', null=True),
         ),
         migrations.AddField(
             model_name='calendarevent',
@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='calendarevent',
             name='state',
-            field=models.ForeignKey(blank=True, to='fullcalendar.EventState', null=True),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, blank=True, to='fullcalendar.EventState', null=True),
         ),
         migrations.AddField(
             model_name='calendarevent',
